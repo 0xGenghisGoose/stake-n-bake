@@ -2,10 +2,24 @@ import { run, ethers } from 'hardhat';
 
 async function deploy() {
 	await run('compile');
-	const Contract = await ethers.getContractFactory('Mover');
-	const contract = await Contract.deploy();
-	await contract.deployed();
-	console.log(contract.address);
+
+	const stakinContract = await ethers.getContractFactory('StakinToken');
+	const deployedStakin = await stakinContract.deploy();
+	await deployedStakin.deployed();
+	console.log('Stakin Token Address: ', deployedStakin.address);
+
+	const bakinContract = await ethers.getContractFactory('BakinToken');
+	const deployedBakin = await bakinContract.deploy();
+	await deployedBakin.deployed();
+	console.log('Bakin Token Address: ', deployedBakin.address);
+
+	const stakeableContract = await ethers.getContractFactory('Stakeable');
+	const deployedStakeable = await stakeableContract.deploy(
+		deployedStakin.address,
+		deployedBakin.address
+	);
+	await deployedStakeable.deployed();
+	console.log('Stakeable Contract Address: ', deployedStakeable.address);
 }
 
 (async () => {
