@@ -5,7 +5,7 @@ import "hardhat/console.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract BakinToken is ERC20 {
-    uint256 _totalSupply;
+    uint256 public _totalSupply;
 
     mapping(address => uint256) public balances;
     mapping(address => mapping(address => uint256)) public allowances;

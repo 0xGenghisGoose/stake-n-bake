@@ -10,8 +10,8 @@ contract StakinToken is ERC20 {
     uint256 public _totalSupply;
     address private _owner;
 
-    mapping(address => uint256) balances;
-    mapping(address => mapping(address => uint256)) allowances;
+    mapping(address => uint256) public balances;
+    mapping(address => mapping(address => uint256)) public allowances;
 
     constructor() ERC20("StakinToken", "STK") {}
 
