@@ -1,43 +1,71 @@
-import * as dotenv from "dotenv";
-
-import { HardhatUserConfig, task } from "hardhat/config";
-import "@nomiclabs/hardhat-etherscan";
-import "@nomiclabs/hardhat-waffle";
-import "@typechain/hardhat";
-import "hardhat-gas-reporter";
-import "solidity-coverage";
-
+import * as dotenv from 'dotenv';
+import { readFileSync } from 'fs';
+import * as toml from 'toml';
+import '@nomiclabs/hardhat-ethers';
+import '@nomiclabs/hardhat-etherscan';
+import 'hardhat-gas-reporter';
+import 'solidity-coverage';
+import { HardhatUserConfig, subtask } from 'hardhat/config';
+import { TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS } from 'hardhat/builtin-tasks/task-names';
 dotenv.config();
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
+const RINKEBY_RPC = process.env.RINKEBY_RPC || '1'.repeat(32);
+const PRIVATE_KEY = process.env.PRIVATE_KEY || '1'.repeat(64);
+const SOLC_DEFAULT = '0.8.10';
 
-  for (const account of accounts) {
-    console.log(account.address);
-  }
-});
+let foundry: any;
+try {
+	foundry = toml.parse(readFileSync('./foundry.toml').toString());
+	foundry.default.solc = foundry.default['solc-version']
+		? foundry.default['solc-version']
+		: SOLC_DEFAULT;
+} catch (error) {
+	foundry = {
+		default: {
+			solc: SOLC_DEFAULT,
+		},
+	};
+}
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
+subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS).setAction(
+	async (_, __, runSuper) => {
+		const paths = await runSuper();
+		return paths.filter((p: string) => !p.endsWith('.t.sol'));
+	}
+);
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.4",
-  networks: {
-    ropsten: {
-      url: process.env.ROPSTEN_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
-    },
-  },
-  gasReporter: {
-    enabled: process.env.REPORT_GAS !== undefined,
-    currency: "USD",
-  },
-  etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
-  },
+	paths: {
+		cache: 'cache-hardhat',
+		sources: './src',
+		tests: './integration',
+	},
+	defaultNetwork: 'hardhat',
+	networks: {
+		hardhat: { chainId: 1337 },
+		rinkeby: {
+			url: RINKEBY_RPC,
+			accounts: [PRIVATE_KEY],
+		},
+	},
+	solidity: {
+		version: foundry.default?.solc || SOLC_DEFAULT,
+		settings: {
+			optimizer: {
+				enabled: foundry.default?.optimizer || true,
+				runs: foundry.default?.optimizer_runs || 200,
+			},
+		},
+	},
+	gasReporter: {
+		currency: 'USD',
+		gasPrice: 77,
+		excludeContracts: ['src/test'],
+		coinmarketcap: process.env.CMC_KEY ?? '',
+	},
+	etherscan: {
+		apiKey: process.env.ETHERSCAN_API_KEY ?? '',
+	},
 };
 
 export default config;
