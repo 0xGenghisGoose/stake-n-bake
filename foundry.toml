@@ -5,5 +5,5 @@ solc-version = "0.8.10"
 verbosity = 4
 remappings = [
   '@rari-capital/solmate/src=node_modules/@rari-capital/solmate/src',
-  '@openzeppelin/contracts/src=node_modules/@openzeppelin/contracts/src'
+  '@openzeppelin-contracts/src=node_modules/@openzeppelin-contracts/contracts/'
 ]
