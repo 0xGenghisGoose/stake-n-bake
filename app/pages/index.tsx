@@ -159,8 +159,9 @@ const Home: NextPage = () => {
 	const mint = async (amount: number) => {
 		try {
 			const signer = await getProviderOrSigner(true);
-			const stakingContract = Stakeable__factory.connect(
+			const stakingContract = new ethers.Contract(
 				stakingContractAddy,
+				stakeableABI,
 				signer
 			);
 
@@ -187,12 +188,14 @@ const Home: NextPage = () => {
 	const stake = async (amount: number) => {
 		try {
 			const signer = await getProviderOrSigner(true);
-			const stakinTokenContract = StakinToken__factory.connect(
+			const stakinTokenContract = new ethers.Contract(
 				stakinTokenAddy,
+				stakinTokenABI,
 				signer
 			);
-			const stakingContract = Stakeable__factory.connect(
+			const stakingContract = new ethers.Contract(
 				stakingContractAddy,
+				stakeableABI,
 				signer
 			);
 
@@ -221,8 +224,9 @@ const Home: NextPage = () => {
 	const unstake = async (amount: number) => {
 		try {
 			const signer = await getProviderOrSigner(true);
-			const stakingContract = Stakeable__factory.connect(
+			const stakingContract = new ethers.Contract(
 				stakingContractAddy,
+				stakeableABI,
 				signer
 			);
 
@@ -247,11 +251,11 @@ const Home: NextPage = () => {
 	const claim = async () => {
 		try {
 			const signer = await getProviderOrSigner(true);
-			const stakingContract = Stakeable__factory.connect(
+			const stakingContract = new ethers.Contract(
 				stakingContractAddy,
+				stakeableABI,
 				signer
 			);
-
 			let tx = await stakingContract.withdrawBakinRewards();
 			setLoading(true);
 			await tx.wait();

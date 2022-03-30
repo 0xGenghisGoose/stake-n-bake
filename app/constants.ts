@@ -1,6 +1,6 @@
-export const stakinTokenAddy = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-export const bakinTokenAddy = '0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512';
-export const stakingContractAddy = '0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0';
+export const stakinTokenAddy = '0xc284e7d3bdd5e7B5BaB1a736B83B43e7A496D46b';
+export const bakinTokenAddy = '0xa1ca166FC31A32a8e232101012bE4173c1FCE8f5';
+export const stakingContractAddy = '0x853009deB37B52deAe3644351745c8C3372a9A94';
 
 export const stakinTokenABI = [
 	{

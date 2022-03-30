@@ -9,8 +9,8 @@ import { HardhatUserConfig, subtask } from 'hardhat/config';
 import { TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS } from 'hardhat/builtin-tasks/task-names';
 dotenv.config();
 
-const RINKEBY_RPC = process.env.RINKEBY_RPC || '1'.repeat(32);
-const PRIVATE_KEY = process.env.PRIVATE_KEY || '1'.repeat(64);
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || '1'.repeat(32);
+const RINKEBY_PRIVATE_KEY = process.env.RINKEBY_PRIVATE_KEY || '1'.repeat(64);
 const SOLC_DEFAULT = '0.8.10';
 
 let foundry: any;
@@ -44,8 +44,8 @@ const config: HardhatUserConfig = {
 	networks: {
 		hardhat: { chainId: 1337 },
 		rinkeby: {
-			url: RINKEBY_RPC,
-			accounts: [PRIVATE_KEY],
+			url: ALCHEMY_API_KEY,
+			accounts: [RINKEBY_PRIVATE_KEY],
 		},
 	},
 	solidity: {
